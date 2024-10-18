@@ -12,5 +12,7 @@ public interface StudentService {
 
     StudentDTO getStudentById(long studentId);
 
-    //StudentDTO updateStudent(long studentId, StudentDTO studentDTO);
+    StudentDTO updateStudent(long studentId, StudentDTO studentDTO);
+
+    StudentDTO deleteStudent(long studentId);
 }
