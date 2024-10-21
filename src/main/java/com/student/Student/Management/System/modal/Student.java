@@ -20,7 +20,7 @@ import java.util.List;
 public class Student {
 
     @Id
-    private long studentId;
+    private String  studentId;
 
     private String studentName;
     private int studentAge;

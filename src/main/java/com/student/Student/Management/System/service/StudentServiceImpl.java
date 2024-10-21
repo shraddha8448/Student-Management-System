@@ -4,6 +4,7 @@ import com.student.Student.Management.System.dto.StudentDTO;
 import com.student.Student.Management.System.exception.StudentNotFoundException;
 import com.student.Student.Management.System.modal.Student;
 import com.student.Student.Management.System.repository.StudentRepository;
+import com.student.Student.Management.System.util.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -13,6 +14,9 @@ public class StudentServiceImpl implements StudentService{
 
     @Autowired
     private StudentRepository studentRepository;
+
+    @Autowired
+    EmailService emailService;
 
     public StudentDTO mapToStudentDTO(Student student){
 
@@ -30,6 +34,7 @@ public class StudentServiceImpl implements StudentService{
     @Override
     public StudentDTO addStudent(StudentDTO studentDTO) {
         Student student = new Student(studentDTO);
+        emailService.sendEmail(studentDTO.getStudentEmail(),"Added Successfully",student.toString());
         return mapToStudentDTO(studentRepository.save(student));
     }
 
@@ -43,13 +48,13 @@ public class StudentServiceImpl implements StudentService{
     }
 
     @Override
-    public StudentDTO getStudentById(long studentId) {
+    public StudentDTO getStudentById(String studentId) {
         Student student = studentRepository.findById(studentId).orElseThrow(()->new StudentNotFoundException("Student not found of studentId : "+ studentId));
         return mapToStudentDTO(student);
     }
 
     @Override
-    public StudentDTO updateStudent(long studentId, StudentDTO studentDTO) {
+    public StudentDTO updateStudent(String studentId, StudentDTO studentDTO) {
         Student student = studentRepository.findById(studentId).orElseThrow(()->new StudentNotFoundException("Student not found of studentId : "+ studentId));
 
         student = new Student(studentDTO);
@@ -58,7 +63,7 @@ public class StudentServiceImpl implements StudentService{
     }
 
     @Override
-    public StudentDTO deleteStudent(long studentId) {
+    public StudentDTO deleteStudent(String studentId) {
 
         Student student= studentRepository.findById(studentId).orElseThrow(()-> new StudentNotFoundException("Student not found of studentId :"+ studentId));
         studentRepository.deleteById(studentId);
